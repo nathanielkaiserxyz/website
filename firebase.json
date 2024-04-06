@@ -5,6 +5,20 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ]
-  }
-}
+    ],
+  
+   "headers": [ {
+    "source": "newgame/index.html",
+    "headers": [ {
+      "key": "Cross-Origin-Opener-Policy",
+      "value": "same-origin"
+    } ] },{ 
+      "source": "newgame/index.html",
+      "headers": [ {
+        "key": "Cross-Origin-Embedder-Policy",
+        "value": "require-corp"
+      } ]
+      
+}] 
+ 
+}}
