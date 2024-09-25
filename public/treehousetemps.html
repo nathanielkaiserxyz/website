@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<link rel="stylesheet" href="styletom.css">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h3>Did I do this right?</h3>
@@ -18,7 +18,7 @@
 <img src = "RASPBERRY.svg" alt="RASPBERRY.svg">
 <p>The wiring of the Pi is a modification of this <a href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/">guide</a>, as I am using two probes, one for the inside and one for the outside. I used a breadboard to wire it, as explained in the guide. Since the whole thing is in a box, it looked decent. The Pi then runs a Python script that sends the two temperatures back inside to the laptop. It will likely lose power or fail, so the script is run as a systemd process. I created a file called temppi.service and put it in /etc/systemd/system/. Then I enabled it like any other systemd service.
 </p>
-<div style="background-color: #b1b0b0; padding: 10px;">
+<div style="background-color: #3A3B3C; padding: 10px;">
 <pre><code># temppi.service
 
 [Unit]
@@ -40,7 +40,7 @@ WantedBy=multi-user.target
 <img src = "CIGARBOX.svg" alt="CIGARBOX.svg">
 
 <p>The temperature probes have documentation <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf">here</a>. Since I needed two, I had to modify the guide to work with both instead of one. This is simple: both show up in /sys/bus/w1/devices/, and simply looking in there will show you their name. From there, we can modify the function read_temp in the guide to have a parameter device.</p>
-<div style="background-color: #b1b0b0; padding: 10px;">
+<div style="background-color: #3A3b3C; padding: 10px;">
 <pre><code>def read_temp(device): 
     base_dir = '/sys/bus/w1/devices/' 
     device_folder = glob.glob(base_dir + device)[0] 
@@ -52,7 +52,7 @@ WantedBy=multi-user.target
    
 The only other significant change is adding Influxdb to the while loop, which runs continuously.
 </p>
-<div style="background-color: #b1b0b0; padding: 10px;">
+<div style="background-color: #3A3B3C; padding: 10px;">
 <pre><code>while True: 
     temp_inside = read_temp('temp-one-name') 
     temp_outside = read_temp('temp-two-name')
@@ -72,7 +72,7 @@ The only other significant change is adding Influxdb to the while loop, which ru
 </code></pre>
 </div>
 <p>
-    Something I thought about a lot when creating this was the difficulty of choosing technology. Choosing between Influxdb, Grafana, or Prometheus becomes complicated without being familiar with what you are doing. Is it better to research any one of the categories deeply, or is it best to research all at once? 
+    Something I thought about a lot when creating this was the difficulty of choosing technology. Choosing between Influxdb, Grafana, or Prometheus becomes complicated without being familiar with what you are doing.  Is it better to deeply research any category, or is it best to do it all at once?  
 </p>
 <p>
     View the complete source here: <a href="https://github.com/nathanielkaiserxyz/temppi">Github</a>.

@@ -3,7 +3,7 @@
       padding: calc(1vmin + .5rem);
       margin-inline: auto; 
       font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em); 
-      font-family: Courier New;
+      font-family: Roboto;
       background-color: #F2F0EE; 
       color: #1F2022;
        

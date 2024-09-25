@@ -4,9 +4,13 @@ html {
       margin-inline: auto; 
       font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em); 
       font-family: verdana;
+      background-color: #000000;
+      color: #FFFDD0;   
+     /*
+      white background 
       background-color: #F2F0EE; 
       color: #1F2022;
-       
+     */  
     }
 
 body :not(:is(h1,h2,h3,h4,h5,h6)) {
@@ -14,20 +18,27 @@ body :not(:is(h1,h2,h3,h4,h5,h6)) {
     }
 
 a {
-  color: #1F2022;
+	color: #FFFDD0;
+	/*
+	color: #1F2022;
+	*/
 }
 
 img {
 	max-width: 100%;
-	
+	filter: invert(91%) sepia(56%) saturate(208%) hue-rotate(338deg) brightness(103%) contrast(104%)	
 }
 
 .container{
 	text-align: center;
 	width: 70ch;
 	height: 15ch;
+	background-color: #3A3B3C;
+	color: #FFFDD0;
+	/*	
 	background-color: #AF727B;	
 	color: #1F2022;
+	*/
 }
 
 .left {
