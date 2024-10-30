@@ -50,6 +50,12 @@ img {
 	width: 50%;
 	text-align: right;
 }
+footer {
+	display: block;
+	width: 100%;
+	line-height: 1.0;
+
+}
 #container:hover .square{
   background-color:black;
 }
