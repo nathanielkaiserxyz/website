@@ -1,0 +1,85 @@
+ <!DOCTYPE html>
+<html>
+
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h3>Did I do this right?</h3>
+<p>Maine winters are cold, especially in a box surrounded by air. My father, twin brother, and I started building a Treehouse when I was ten. You can imagine how much I helped at that age. However, the finished product is very nice: an 8x8-foot room with a wood stove and another room for sleeping above. The only real issue is heating it in the winter. When you add wood and go back inside somewhere warm, knowing when to go out is challenging.
+</p>
+<p>I recently built a temperature monitor to solve this problem. It's a Raspberry Pi 1b in a cigar box with two DS18B20 temperature probes coming from drilled-in holes. I built it to measure the temperature inside and outside the treehouse during the winter. I made this project so you can see the temperature go up after you load up the woodstove with fuel so you can decide the perfect time to go out.
+</p>
+<p>I decided to make something that could accomplish this. Using this <a href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/">guide</a> and its code, which I modified <a href="https://github.com/nathanielkaiserxyz/temppi">here</a>, I have something satisfactory.
+</p>
+<img src = "TREEFORT.svg" alt="TREEFORT.svg">
+<p>Immediately, I ran into some slight problems. The original Pi's 700mhz processor and 512MB of ram couldn't run an Influxdb or Prometheus instance while monitoring the temperature. I could have made some simpler Python web server or SSH into the Pi every time, but pretty graphs of Influxdb conned me, and I want other people in the house to use this project. So something hard to use or ugly wasn't going to cut it. Instead of the Pi running the web server, I installed Ubuntu on an old laptop and ran Influxdb from there. I chose Influxdb because it takes a log and displays a dashboard with the current temperature. I read somewhere that Prometheus and Grafana had to do more setups to keep logs, so I decided not to use them. I want to be able to see the change in temps over the course of a day, and save the data so I can see it all at the end of the year.  
+</p>
+<img src = "RASPBERRY.svg" alt="RASPBERRY.svg">
+<p>The wiring of the Pi is a modification of this <a href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-11-ds18b20-temperature-sensing/">guide</a>, as I am using two probes, one for the inside and one for the outside. I used a breadboard to wire it, as explained in the guide. Since the whole thing is in a box, it looked decent. The Pi then runs a Python script that sends the two temperatures back inside to the laptop. It will likely lose power or fail, so the script is run as a systemd process. I created a file called temppi.service and put it in /etc/systemd/system/. Then I enabled it like any other systemd service.
+</p>
+<div style="background-color: #3A3B3C; padding: 10px;">
+<pre><code># temppi.service
+
+[Unit]
+Description=influxdb temperature service
+After=network.target
+#StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=pi
+ExecStart=/usr/bin/python3 /home/pi/influxdbtemp.py
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+</div>
+<img src = "CIGARBOX.svg" alt="CIGARBOX.svg">
+
+<p>The temperature probes have documentation <a href="https://www.analog.com/media/en/technical-documentation/data-sheets/ds18b20.pdf">here</a>. Since I needed two, I had to modify the guide to work with both instead of one. This is simple: both show up in /sys/bus/w1/devices/, and simply looking in there will show you their name. From there, we can modify the function read_temp in the guide to have a parameter device.</p>
+<div style="background-color: #3A3b3C; padding: 10px;">
+<pre><code>def read_temp(device): 
+    base_dir = '/sys/bus/w1/devices/' 
+    device_folder = glob.glob(base_dir + device)[0] 
+    device_file = device_folder + '/w1_slave' 
+    lines = read_temp_raw(device_file)
+</code></pre>
+</div>
+<p>
+   
+The only other significant change is adding Influxdb to the while loop, which runs continuously.
+</p>
+<div style="background-color: #3A3B3C; padding: 10px;">
+<pre><code>while True: 
+    temp_inside = read_temp('temp-one-name') 
+    temp_outside = read_temp('temp-two-name')
+
+    outside = ( Point("temp_outside") .tag("name1", "value1") 
+         .field("field1", temp_outside[1])
+    )
+
+    inside = ( Point("temp_inside") .tag("name1", "value1") 
+         .field("field1", temp_inside[1])
+    )
+
+    write_api.write(bucket=bucket, org="your org", record=outside) 
+    write_api.write(bucket=bucket, org="your org", record=inside)
+
+    time.sleep(10) 
+</code></pre>
+</div>
+<p>
+    Something I thought about a lot when creating this was the difficulty of choosing technology. Choosing between Influxdb, Grafana, or Prometheus becomes complicated without being familiar with what you are doing.  Is it better to deeply research any category, or is it best to do it all at once?  
+</p>
+<p>
+    View the complete source here: <a href="https://github.com/nathanielkaiserxyz/temppi">Github</a>.
+</p>
+
+
+
+</body>
+</html> 
+
