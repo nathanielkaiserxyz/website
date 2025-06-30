@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      </script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h3>32<h3>
 <img src = "DAY32.svg" alt="DAY32.svg">
-
+<script src="theme.js" defer></script>
 </body>
 </html>
 

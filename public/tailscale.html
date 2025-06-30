@@ -2,6 +2,12 @@
 <html>
 
 <head>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      </script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,7 +24,7 @@
     
     Tailscale is a really cool piece of software, I've never had any problems with it, and if you have a passing interest in computers its a great way to have fun connecting all of them
     </p>
-
+    <script src="theme.js" defer></script>
 </body>
 </html> 
 

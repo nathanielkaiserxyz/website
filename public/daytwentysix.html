@@ -1,11 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      </script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h3>26<h3>
 <img src = "DANCER.svg" alt="DANCER.svg">
+<script src="theme.js" defer></script>
 </body>
 </html>
 

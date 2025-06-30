@@ -1,12 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+      </script>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <h3>16<h3>
 <img src = "SNAKE.svg" alt="SNAKE.svg">
 <img src = "BUTTHOLE.svg" alt="BUTTHOLE.svg">
+<script src="theme.js" defer></script>
 </body>
 </html>
 
