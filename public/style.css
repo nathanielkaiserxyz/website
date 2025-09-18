@@ -61,7 +61,11 @@
   body :not(:is(h1,h2,h3,h4,h5,h6)) {
 	line-height: 1.75;
   }
-  
+  div {
+  	align-items: flex-start;
+	vertical-align: middle;
+  	gap: 10px;
+  }
   a {
 	color: var(--link-color);
   }
@@ -75,18 +79,20 @@
 	text-align: center;
 	width: 70ch;
 	height: 15ch;
+	vertical-align: middle;
 	background-color: var(--container-bg);
 	color: var(--container-text);
   }
   
   .left {
-	float: left;
-	width: 50%;
+	display: inline-block;
+  	vertical-align: middle;
+  	margin-right: 10px; /* optional spacing */
   }
   .right {
-	float: right;
-	width: 50%;
-	text-align: right;
+	display: inline-block;
+  	vertical-align: middle;
+  	margin-left: 10px; /* optional spacing */
   }
   footer {
 	display: block;
