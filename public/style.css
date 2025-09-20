@@ -61,6 +61,7 @@
   body :not(:is(h1,h2,h3,h4,h5,h6)) {
 	line-height: 1.75;
   }
+
   .header {
 	display: flex;
 	align-items: center;
@@ -71,7 +72,9 @@
   	line-height: 1;
   	margin: 0;
 	vertical-align: center;
+	line-height: 1;
 	}
+
   a {
 	color: var(--link-color);
   }
@@ -112,7 +115,7 @@
   #theme-toggle img {
   	width: 48px;
   	height: 48px;
-  	display: block; /* removes extra inline gap */
+  	display: block; 
 }
   
   #theme-toggle:hover {

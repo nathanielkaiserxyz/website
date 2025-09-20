@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+          document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+    </script>
   <meta charset="UTF-8">
   <title>My Second Game Jam</title>
+  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
