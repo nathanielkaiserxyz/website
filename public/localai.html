@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+// Fix localStorage typo and theme setup
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+
+// Theme toggle functionality
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+});
+</script>
+
+<style>
+:root {
+  /* Default light theme variables */
+  --bg-color: #F2F0EE;
+  --text-color: #1F2022;
+  --link-color: #1F2022;
+  --container-bg: #AF727B;
+  --container-text: #1F2022;
+  --image-filter: invert(9%) sepia(4%) saturate(355%) hue-rotate(179deg) brightness(95%) contrast(90%);
+  --hover-square-bg: white;
+  --emoji-color: #1F2022;
+}
+
+/* Dark mode via prefers-color-scheme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #000000;
+    --text-color: #FFFDD0;
+    --link-color: #FFFDD0;
+    --container-bg: #3A3B3C;
+    --container-text: #FFFDD0;
+    --image-filter: invert(91%) sepia(56%) saturate(208%) hue-rotate(338deg) brightness(103%) contrast(104%);
+    --hover-square-bg: black;
+    --emoji-color: #FFFDD0;
+  }
+}
+
+/* Override for manual theme switching */
+[data-theme="light"] {
+  --bg-color: #F2F0EE;
+  --text-color: #1F2022;
+  --link-color: #1F2022;
+  --container-bg: #AF727B;
+  --container-text: #1F2022;
+  --image-filter: invert(9%) sepia(4%) saturate(355%) hue-rotate(179deg) brightness(95%) contrast(90%);
+  --hover-square-bg: white;
+  --emoji-color: #1F2022;
+}
+
+[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #FFFDD0;
+  --link-color: #FFFDD0;
+  --container-bg: #3A3B3C;
+  --container-text: #FFFDD0;
+  --image-filter: invert(91%) sepia(56%) saturate(208%) hue-rotate(338deg) brightness(103%) contrast(104%);
+  --hover-square-bg: black;
+  --emoji-color: #FFFDD0;
+}
+
+/* Base styling using variables */
+html {
+  max-width: 70ch;
+  padding: calc(1vmin + .5rem);
+  margin-inline: auto;
+  font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em);
+  font-family: verdana;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body :not(:is(h1,h2,h3,h4,h5,h6)) {
+  line-height: 1.75;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--container-bg);
+}
+
+.header h3 {
+  font-size: 24px;
+  line-height: 1;
+  margin: 0;
+  vertical-align: center;
+  line-height: 1;
+}
+
+a {
+  color: var(--link-color);
+}
+
+img {
+  max-width: 100%;
+  filter: var(--image-filter);
+}
+
+.container {
+  text-align: center;
+  width: 70ch;
+  height: 15ch;
+  vertical-align: middle;
+  background-color: var(--container-bg);
+  color: var(--container-text);
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+footer {
+  display: block;
+  width: 100%;
+  line-height: 1.0;
+  margin-top: 3rem;
+}
+
+#theme-toggle {
+  padding: 0;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#theme-toggle img {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* Progress bar */
+#progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background-color: var(--container-bg);
+  width: 0;
+  z-index: 1000;
+  transition: width 0.3s ease;
+}
+
+/* Inline footnotes */
+.footnote {
+  position: relative;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--container-bg);
+}
+
+.footnote::before {
+  content: " ";
+  display: block;
+  height: 1px;
+  background-color: var(--container-bg);
+  margin-bottom: 0.5rem;
+}
+
+.footnote-number {
+  display: inline-block;
+  margin-right: 0.5rem;
+  cursor: pointer;
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+.footnote-content {
+  display: none;
+  padding-left: 1rem;
+  background-color: var(--container-bg);
+  border: 1px solid var(--container-bg);
+  margin-top: 0.5rem;
+}
+
+.footnote-content.show {
+  display: block;
+}
+</style>
+</head>
+<body>
+  
+<div id="progress-bar"></div>
+
+<header class="header">
+  <h3>My Blog</h3>
+  <button id="theme-toggle">
+    <img src="https://gwern.net/images/sun-moon.svg" alt="Theme toggle">
+  </button>
+</header>
+
+<main class="container">
+  <article>
+    <h1>Sample Article Title</h1>
+    
+    <p>This is a sample article that demonstrates the theme switching and progress tracking features. As you scroll through the content, you'll see a progress bar at the top showing how far you've read.</p>
+    
+    <p>Here's a <a href="#">link</a> to demonstrate styling. This is also a great place to include some <strong>inline footnotes</strong>.</p>
+    
+    <p>Let's see how the progress bar works as you scroll down. The indicator will show your progress across the top of the page.</p>
+    
+    <p>Here's another paragraph to demonstrate the scroll tracking. The progress bar should update as you move through the content.</p>
+    
+    <div class="footnote">
+      <span class="footnote-number">1</span>
+      <div class="footnote-content">
+        This is the content of the first footnote. It should appear when you click on the number 1.
+      </div>
+    </div>
+    
+    <p>And here's another paragraph with a footnote reference <span class="footnote-number">2</span>.</p>
+    
+    <div class="footnote">
+      <span class="footnote-number">2</span>
+      <div class="footnote-content">
+        This is the content of the second footnote. It should appear when you click on the number 2.
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  &copy; 2023 My Blog
+</footer>
+
+<script>
+// Scroll progress bar
+const progressBar = document.getElementById('progress-bar');
+let lastScrollTop = 0;
+
+window.addEventListener('scroll', () => {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight;
+  
+  const scrollPercent = Math.min(100, Math.max(0, (scrollTop / (documentHeight - windowHeight)) * 100));
+  progressBar.style.width = scrollPercent + '%';
+});
+
+// Footnote toggling
+document.querySelectorAll('.footnote-number').forEach(marker => {
+  marker.addEventListener('click', () => {
+    const footnoteContent = marker.nextElementSibling;
+    footnoteContent.classList.toggle('show');
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+</script>
+
+<style>
+:root {
+  --bg-color: #F2F0EE;
+  --text-color: #1F2022;
+  --link-color: #1F2022;
+  --container-bg: #AF727B;
+  --container-text: #1F2022;
+  --image-filter: invert(9%) sepia(4%) saturate(355%) hue-rotate(179deg) brightness(95%) contrast(90%);
+  --hover-square-bg: white;
+  --emoji-color: #1F2022;
+  --progress-bar: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #000000;
+    --text-color: #FFFDD0;
+    --link-color: #FFFDD0;
+    --container-bg: #3A3B3C;
+    --container-text: #FFFDD0;
+    --image-filter: invert(91%) sepia(56%) saturate(208%) hue-rotate(338deg) brightness(103%) contrast(104%);
+    --hover-square-bg: black;
+    --emoji-color: #FFFDD0;
+    --progress-bar: #ffffff;
+  }
+}
+
+[data-theme="light"] { }
+[data-theme="dark"] { }
+
+html {
+  max-width: 70ch;
+  padding: calc(1vmin + .5rem);
+  margin-inline: auto;
+  font-size: clamp(1em, 0.9em + 0.45vmin, 1.25em);
+  font-family: Georgia, "Times New Roman", serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+body {
+  margin: 0;
+}
+
+body :not(:is(h1,h2,h3,h4,h5,h6)) {
+  line-height: 1.75;
+}
+
+h1,h2,h3 {
+  font-weight: normal;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  filter: var(--image-filter);
+}
+
+/* Progress Bar */
+#progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  z-index: 9999;
+}
+
+#progress-bar {
+  height: 4px;
+  width: 0%;
+  background: var(--progress-bar);
+  transition: width 0.1s linear;
+}
+
+/* Footnotes */
+.footnote-ref {
+  cursor: pointer;
+  font-size: 0.8em;
+  vertical-align: super;
+}
+
+.footnote-inline {
+  display: none;
+  font-size: 0.9em;
+  border-left: 2px solid var(--text-color);
+  padding-left: 0.75rem;
+  margin: 0.5rem 0;
+  opacity: 0.9;
+}
+
+.footnote-inline.active {
+  display: block;
+}
+
+/* Layout */
+header {
+  margin-bottom: 3rem;
+}
+
+article {
+  margin-bottom: 4rem;
+}
+
+footer {
+  margin-top: 4rem;
+  font-size: 0.9em;
+  opacity: 0.7;
+}
+</style>
+</head>
+
+<body>
+
+<div id="progress-container">
+  <div id="progress-bar"></div>
+</div>
+
+<header>
+  <h1>Article Title</h1>
+</header>
+
+<article>
+
+<p>
+Main paragraph text.<sup class="footnote-ref" data-note="fn1">1</sup>
+</p>
+
+<div id="fn1" class="footnote-inline">
+Footnote content goes here.
+</div>
+
+<p>
+Second paragraph.<sup class="footnote-ref" data-note="fn2">2</sup>
+</p>
+
+<div id="fn2" class="footnote-inline">
+Another inline footnote.
+</div>
+
+<h2>Section Heading</h2>
+
+<p>
+More structural placeholder text.
+</p>
+
+</article>
+
+<footer>
+Minimal footer.
+</footer>
+
+<script>
+/* Scroll Progress */
+window.onscroll = function() {
+  const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById("progress-bar").style.width = scrolled + "%";
+};
+
+/* Inline Footnotes */
+document.querySelectorAll(".footnote-ref").forEach(ref => {
+  ref.addEventListener("click", function() {
+    const note = document.getElementById(this.dataset.note);
+    note.classList.toggle("active");
+  });
+});
+</script>
+
+</body>
+</html>

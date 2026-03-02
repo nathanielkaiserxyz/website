@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+}
+</script>
+<style>
+:root {
+  --bg-color: #F2F0EE;
+  --text-color: #1F2022;
+  --link-color: #1F2022;
+  --container-bg: #AF727B;
+  --container-text: #1F2022;
+  --image-filter: invert(9%) sepia(4%) saturate(355%) hue-rotate(179deg) brightness(95%) contrast(90%);
+  --hover-square-bg: white;
+  --emoji-color: #1F2022;
+  --sidenote-outline: #1F2022;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #000000;
+    --text-color: #FFFDD0;
+    --link-color: #FFFDD0;
+    --container-bg: #3A3B3C;
+    --container-text: #FFFDD0;
+    --image-filter: invert(91%) sepia(56%) saturate(208%) hue-rotate(338deg) brightness(103%) contrast(104%);
+    --hover-square-bg: black;
+    --emoji-color: #FFFDD0;
+    --sidenote-outline: #FFFDD0;
+  }
+}
+
+[data-theme="light"] {
+  --bg-color: #F2F0EE;
+  --text-color: #1F2022;
+  --link-color: #1F2022;
+  --container-bg: #AF727B;
+  --container-text: #1F2022;
+  --image-filter: invert(9%) sepia(4%) saturate(355%) hue-rotate(179deg) brightness(95%) contrast(90%);
+  --hover-square-bg: white;
+  --emoji-color: #1F2022;
+  --sidenote-outline: #1F2022;
+}
+
+[data-theme="dark"] {
+  --bg-color: #000000;
+  --text-color: #FFFDD0;
+  --link-color: #FFFDD0;
+  --container-bg: #3A3B3C;
+  --container-text: #FFFDD0;
+  --image-filter: invert(91%) sepia(56%) saturate(208%) hue-rotate(338deg) brightness(103%) contrast(104%);
+  --hover-square-bg: black;
+  --emoji-color: #FFFDD0;
+  --sidenote-outline: #FFFDD0;
+}
+
+/* Reset & base */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: verdana;
+  font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em);
+}
+
+body {
+  min-height: 100vh;
+  padding: calc(1vmin + .5rem);
+}
+
+/* === PAGE LAYOUT === */
+/* Three-column grid: left sidenotes | article | right sidenotes */
+.page-layout {
+  display: grid;
+  grid-template-columns: 1fr minmax(0, 70ch) 1fr;
+  gap: 0 2rem;
+  max-width: calc(70ch + 2 * (18ch + 2rem));
+  margin-inline: auto;
+  align-items: start;
+}
+
+/* === ARTICLE (CENTER COLUMN) === */
+.article-column {
+  grid-column: 2;
+}
+
+.article-column :not(:is(h1,h2,h3,h4,h5,h6)) {
+  line-height: 1.75;
+}
+
+/* === SIDENOTE COLUMNS === */
+.sidenotes-left {
+  grid-column: 1;
+  position: relative;
+}
+
+.sidenotes-right {
+  grid-column: 3;
+  position: relative;
+}
+
+/* === INDIVIDUAL SIDENOTE === */
+.sidenote {
+  position: absolute;
+  border: 1.5px solid var(--sidenote-outline);
+  padding: 0.5rem 0.75rem;
+  font-size: 0.78em;
+  line-height: 1.5;
+  width: 100%;
+  color: var(--text-color);
+  background-color: transparent;
+}
+
+.sidenote-number {
+  font-weight: bold;
+  margin-bottom: 0.2em;
+  display: block;
+}
+
+.sidenote p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* === SUPERSCRIPT REFERENCE === */
+sup.ref {
+  font-size: 0.7em;
+  vertical-align: super;
+  font-weight: bold;
+  color: var(--text-color);
+  cursor: default;
+}
+
+/* === HEADER === */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header h3 {
+  font-size: 24px;
+  line-height: 1;
+  margin: 0;
+}
+
+a {
+  color: var(--link-color);
+}
+
+img {
+  max-width: 100%;
+  filter: var(--image-filter);
+}
+
+.container {
+  text-align: center;
+  width: 100%;
+  height: 15ch;
+  vertical-align: middle;
+  background-color: var(--container-bg);
+  color: var(--container-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+footer {
+  display: block;
+  width: 100%;
+  line-height: 1.0;
+  margin-top: 2rem;
+}
+
+#container:hover .square {
+  background-color: var(--hover-square-bg);
+}
+
+#theme-toggle {
+  padding: 0;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+#theme-toggle img {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* === RESPONSIVE: collapse sidenotes on small screens === */
+@media (max-width: 900px) {
+  .page-layout {
+    grid-template-columns: 1fr;
+    max-width: 70ch;
+  }
+
+  .sidenotes-left,
+  .sidenotes-right {
+    grid-column: 1;
+    position: static;
+    margin-bottom: 1rem;
+  }
+
+  .article-column {
+    grid-column: 1;
+  }
+
+  .sidenote {
+    position: static !important;
+    top: auto !important;
+    width: 100%;
+    margin-bottom: 0.75rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+
+  <!-- LEFT SIDENOTES -->
+  <div class="sidenotes-left" id="sidenotes-left">
+    <!-- Sidenotes are positioned via JS to align with their reference point -->
+  </div>
+
+  <!-- CENTER ARTICLE -->
+  <div class="article-column">
+
+    <div class="header">
+      <h3>2026-03-01</h3>
+    </div>
+
+    <p>
+    You've<sup class="ref" id="ref-1" data-note="note-1">1</sup> probably heard of openclaw at this point and I just wanted to share a 
+    funny misconception about how it works I had. The reason that people are buying
+    the mac minis to use to use the [ <a href="https://openclaw.ai/">openclaw interface</a> ] is not to run the agents 
+    locally, something like this [ <a href="https://www.jeffgeerling.com/blog/2025/15-tb-vram-on-mac-studio-rdma-over-thunderbolt-5/">Jeff Geerling</a> ] build but basically to use imessage
+    and make api calls. 
+    </p>
+
+    <p>
+    What is the point of 600 dollars for hardware that you don't even use? I guess 
+    imessage is a little harder to run without apple hardware?<sup class="ref" id="ref-2" data-note="note-2">2</sup>  I don't have a mac 
+    mini, but I do have an AMD Radeon RX6700XT<sup class="ref" id="ref-3" data-note="note-3">3</sup>. Which I actually kind of lucked out 
+    on the 12gb of VRAM that it has. I bought the card right before 2022 and was 
+    not planning to run llms with it. I have been trying some out though and it
+    has been fun. With Ollama and Open WebUI I've been running the latest and greatest 
+    qwen3:14b at 44 tok/s which while not the best at least runs it better then 
+    the worst [ <a href="https://www.insiderllm.com/guides/best-local-llms-mac-2026/">m4 mac</a> ]? I'm not that impressed with its output though I prompted 
+    it to create a [ <a href="localai.html">webpage</a> ] with just html css and javascript, and it kind of just 
+    made junk. The same prompt into gemini didn't work, chatgpt made this [ <a href="chatgpt.html">page</a> ],
+    and I just used claude with some edits to make the page you are reading. 
+    </p>
+
+    <p>
+    Also, yes I don't know how to prompt effectively, it feels so ambiguous when I ask 
+    it to do something wholesale. When I get to the point of having to specify every
+    little thing that is needed to be done and making sure that the llm is doing it 
+    correctly why should I not just make it myself and google/ask if I'm confused 
+    about a particular thing? I'm interest in trying out opencode to see if using 
+    agents can make me not have to learn anything new and just let me keep typing bad 
+    prompts. Classic AI programmer style. 
+    </p>
+
+    <p>
+    Regardless, I know that the m4 can run larger models and is better. My 
+    point is that if you are really using this project like it is intended to work
+    why would you not use the best model available? If you are entrusting your .env,
+    api keys to all your web accounts, build toy software, AND to make 
+    reservations for dinner on your behalf is it even worth it compromise in the quality 
+    of your model? I'm not really sure what the numbers are, but it doesn't 
+    seem like a ton of the 243k github stars are running models locally.
+    </p>
+
+    <p>
+    Summer Yue<sup class="ref" id="ref-4" data-note="note-4">4</sup> has a post in x the everything app that shows openclaw deleting her 
+    inbox after prompting openclaw to 'clean' it. If I did that you couldn't pry that infomation 
+    out of my cold dead body. 
+    </p>
+
+    <p>
+    Why does this software have more stars on github than the linux kernel? 
+    </p>
+    
+  <footer>
+  <details>
+    <summary><small>view prompt used</small></summary>
+    <pre><code>
+    write me a html css and java script website that looks like 
+    https://gwern.net/blog/2026/hutter-prize and don’t fill it with content. Use
+    the theming of the html and css provided, but add the features of gwern 
+    website. I would like to have the inline footnotes and the indicator across 
+    the top that shows how far in the article you’ve read. So as you scroll down,
+    a white line across the top shows how far you’ve scrolled.</code></pre>
+  </details>
+</footer>
+
+  </div>
+
+  <!-- RIGHT SIDENOTES -->
+  <div class="sidenotes-right" id="sidenotes-right">
+  </div>
+
+</div>
+
+<!-- Sidenote data — edit here to change content -->
+<script>
+  const sidenotes = [
+    {
+      id: "note-1",
+      refId: "ref-1",
+      side: "right",
+      number: 1,
+      text: "<a href=\"https://youtu.be/a5njM00BGS4?t=404\">Here</a> is something to listen to if you're bored"
+    },
+    {
+      id: "note-2",
+      refId: "ref-2",
+      side: "left",
+      number: 2,
+      text: "I have no idea what the state of hackintosh is these days"
+    },
+    {
+      id: "note-3",
+      refId: "ref-3",
+      side: "right",
+      number: 3,
+      text: `Helpful links to setup ROCm with AMD:
+  <span style="white-space:nowrap">[ <a href="https://llm-tracker.info/howto/AMD-GPUs#bkmrk-arch-linux-setup">llm-tracker</a> ]</span>
+  <span style="white-space:nowrap">[ <a href="https://burakberk.dev/deploying-ollama-open-webui-self-hosted/">Burak Berk Keskin</a> ]</span>
+  <span style="white-space:nowrap">[ <a href="https://wiki.archlinux.org/title/General-purpose_computing_on_graphics_processing_units#ROCm">Arch Wiki</a> ]</span>`
+    },
+    {
+      id: "note-4",
+      refId: "ref-4",
+      side: "left",
+      number: 4,
+      text: "\"<a href=\"https://xcancel.com/summeryue0/status/2025774069124399363#m\">Safety and alignment at Meta Superintelligence.</a>\""
+    }
+  ];
+
+  function positionSidenotes() {
+    const leftCol = document.getElementById('sidenotes-left');
+    const rightCol = document.getElementById('sidenotes-right');
+
+    // Clear existing
+    leftCol.innerHTML = '';
+    rightCol.innerHTML = '';
+
+    // Build note elements
+    sidenotes.forEach(note => {
+      const refEl = document.getElementById(note.refId);
+      if (!refEl) return;
+
+      const el = document.createElement('div');
+      el.className = 'sidenote';
+      el.id = note.id;
+      el.innerHTML = `<span class="sidenote-number">${note.number}.</span><p>${note.text}</p>`;
+
+      const col = note.side === 'left' ? leftCol : rightCol;
+      col.appendChild(el);
+    });
+
+    // Track the lowest used bottom edge for each column to avoid overlap
+    const columnBottom = { left: 0, right: 0 };
+
+    sidenotes.forEach(note => {
+      const refEl = document.getElementById(note.refId);
+      const noteEl = document.getElementById(note.id);
+      if (!refEl || !noteEl) return;
+
+      const col = note.side === 'left' ? leftCol : rightCol;
+
+      // top of ref relative to the column (which is position:relative)
+      const refRect = refEl.getBoundingClientRect();
+      const colRect = col.getBoundingClientRect();
+
+      let top = refRect.top - colRect.top;
+
+      // Don't overlap previous notes in this column
+      const minTop = columnBottom[note.side];
+      if (top < minTop) top = minTop;
+
+      noteEl.style.top = top + 'px';
+
+      columnBottom[note.side] = top + noteEl.offsetHeight + 12;
+    });
+
+    // Set column min-height so the grid doesn't collapse
+    ['left', 'right'].forEach(side => {
+      const col = document.getElementById('sidenotes-' + side);
+      col.style.minHeight = columnBottom[side] + 'px';
+    });
+  }
+
+  // Run after layout settles
+  window.addEventListener('load', () => {
+    positionSidenotes();
+  });
+
+  window.addEventListener('resize', () => {
+    // Reset margin-tops before recalculating
+    sidenotes.forEach(note => {
+      const el = document.getElementById(note.id);
+      if (el) el.style.marginTop = '0px';
+    });
+    positionSidenotes();
+  });
+</script>
+
+<script src="theme.js" defer></script>
+</body>
+</html>
