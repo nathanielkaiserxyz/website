@@ -7,7 +7,6 @@ if (savedTheme) {
   document.documentElement.setAttribute('data-theme', savedTheme);
 }
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 :root {
   --bg-color: #F2F0EE;
@@ -59,6 +58,7 @@ if (savedTheme) {
   --sidenote-outline: #FFFDD0;
 }
 
+/* Reset & base */
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -78,6 +78,7 @@ body {
 }
 
 /* === PAGE LAYOUT === */
+/* Three-column grid: left sidenotes | article | right sidenotes */
 .page-layout {
   display: grid;
   grid-template-columns: 1fr minmax(0, 70ch) 1fr;
@@ -180,13 +181,6 @@ footer {
   margin-top: 2rem;
 }
 
-footer pre {
-  white-space: pre-wrap;
-  word-break: break-word;
-  overflow-x: auto;
-  font-size: 0.85em;
-}
-
 #container:hover .square {
   background-color: var(--hover-square-bg);
 }
@@ -212,29 +206,6 @@ footer pre {
   background-color: rgba(128, 128, 128, 0.2);
 }
 
-/* === INLINE SIDENOTES (mobile) === */
-.inline-sidenote {
-  display: none;
-  border: 1.5px solid var(--sidenote-outline);
-  padding: 0.5rem 0.75rem;
-  font-size: 0.82em;
-  line-height: 1.5;
-  color: var(--text-color);
-  background-color: transparent;
-  margin: 0.5rem 0 1rem 0;
-}
-
-.inline-sidenote .sidenote-number {
-  font-weight: bold;
-  margin-bottom: 0.2em;
-  display: block;
-}
-
-.inline-sidenote p {
-  margin: 0;
-  line-height: 1.5;
-}
-
 /* === RESPONSIVE: collapse sidenotes on small screens === */
 @media (max-width: 900px) {
   .page-layout {
@@ -244,16 +215,20 @@ footer pre {
 
   .sidenotes-left,
   .sidenotes-right {
-    display: none; /* hide the floating columns */
+    grid-column: 1;
+    position: static;
+    margin-bottom: 1rem;
   }
 
   .article-column {
     grid-column: 1;
   }
 
-  /* Show inline sidenotes on mobile */
-  .inline-sidenote {
-    display: block;
+  .sidenote {
+    position: static !important;
+    top: auto !important;
+    width: 100%;
+    margin-bottom: 0.75rem;
   }
 }
 </style>
@@ -263,54 +238,38 @@ footer pre {
 <div class="page-layout">
 
   <!-- LEFT SIDENOTES -->
-  <div class="sidenotes-left" id="sidenotes-left"></div>
+  <div class="sidenotes-left" id="sidenotes-left">
+    <!-- Sidenotes are positioned via JS to align with their reference point -->
+  </div>
 
   <!-- CENTER ARTICLE -->
   <div class="article-column">
-    <img src = "openclaw.svg" alt="openclaw.svg">
+
     <div class="header">
       <h3>2026-03-01</h3>
     </div>
 
     <p>
     You've<sup class="ref" id="ref-1" data-note="note-1">1</sup> probably heard of openclaw at this point and I just wanted to share a 
-    funny misconception about how it works that I had. The reason that people are buying
+    funny misconception about how it works I had. The reason that people are buying
     the mac minis to use to use the [ <a href="https://openclaw.ai/">openclaw interface</a> ] is not to run the agents 
-    locally. I had thought it was something like this [ <a href="https://www.jeffgeerling.com/blog/2025/15-tb-vram-on-mac-studio-rdma-over-thunderbolt-5/">Jeff Geerling</a> ] build. 
-    Instead it seems like people just use them for imessage and to call their 
-    favorite API. 
+    locally, something like this [ <a href="https://www.jeffgeerling.com/blog/2025/15-tb-vram-on-mac-studio-rdma-over-thunderbolt-5/">Jeff Geerling</a> ] build but basically to use imessage
+    and make api calls. 
     </p>
-    <!-- Inline sidenote 1 for mobile -->
-    <div class="inline-sidenote" id="inline-note-1">
-      <span class="sidenote-number">1.</span>
-      <p><a href="https://youtu.be/a5njM00BGS4?t=404">Here</a> is something to listen to if you're bored</p>
-    </div>
 
     <p>
     What is the point of 600 dollars for hardware that you don't even use? I guess 
-    imessage is a little harder to run without apple hardware.<sup class="ref" id="ref-2" data-note="note-2">2</sup>  I don't have a mac 
+    imessage is a little harder to run without apple hardware?<sup class="ref" id="ref-2" data-note="note-2">2</sup>  I don't have a mac 
     mini, but I do have an AMD Radeon RX6700XT<sup class="ref" id="ref-3" data-note="note-3">3</sup>. Which I actually kind of lucked out 
     on the 12gb of VRAM that it has. I bought the card right before 2022 and was 
     not planning to run llms with it. I have been trying some out though and it
     has been fun. With Ollama and Open WebUI I've been running the latest and greatest 
     qwen3:14b at 44 tok/s which while not the best at least runs it better then 
-    the worst [ <a href="https://www.insiderllm.com/guides/best-local-llms-mac-2026/">m4 mac</a> ]. I'm not that impressed with its output though I prompted 
+    the worst [ <a href="https://www.insiderllm.com/guides/best-local-llms-mac-2026/">m4 mac</a> ]? I'm not that impressed with its output though I prompted 
     it to create a [ <a href="localai.html">webpage</a> ] with just html css and javascript, and it kind of just 
     made junk. The same prompt into gemini didn't work, chatgpt made this [ <a href="chatgpt.html">page</a> ],
     and I just used claude with some edits to make the page you are reading. 
     </p>
-    <!-- Inline sidenotes 2 & 3 for mobile -->
-    <div class="inline-sidenote" id="inline-note-2">
-      <span class="sidenote-number">2.</span>
-      <p>I have no idea what the state of hackintosh is these days</p>
-    </div>
-    <div class="inline-sidenote" id="inline-note-3">
-      <span class="sidenote-number">3.</span>
-      <p>Helpful links to setup ROCm with AMD:
-      <span style="white-space:nowrap">[ <a href="https://llm-tracker.info/howto/AMD-GPUs#bkmrk-arch-linux-setup">llm-tracker</a> ]</span>
-      <span style="white-space:nowrap">[ <a href="https://burakberk.dev/deploying-ollama-open-webui-self-hosted/">Burak Berk Keskin</a> ]</span>
-      <span style="white-space:nowrap">[ <a href="https://wiki.archlinux.org/title/General-purpose_computing_on_graphics_processing_units#ROCm">Arch Wiki</a> ]</span></p>
-    </div>
 
     <p>
     Also, yes I don't know how to prompt effectively, it feels so ambiguous when I ask 
@@ -323,38 +282,23 @@ footer pre {
     </p>
 
     <p>
-    Regardless, I know that the M4 can run larger models and is better. My 
+    Regardless, I know that the m4 can run larger models and is better. My 
     point is that if you are really using this project like it is intended to work
     why would you not use the best model available? If you are entrusting your .env,
     api keys to all your web accounts, build toy software, AND to make 
     reservations for dinner on your behalf is it even worth it compromise in the quality 
     of your model? I'm not really sure what the numbers are, but it doesn't 
-    seem like a ton of the 243k github stars are running models locally. If they
-    are running a local model it seems foolish.
+    seem like a ton of the 243k github stars are running models locally.
     </p>
 
     <p>
     Summer Yue<sup class="ref" id="ref-4" data-note="note-4">4</sup> has a post in x the everything app that shows openclaw deleting her 
     inbox after prompting openclaw to 'clean' it. If I did that you couldn't pry that infomation 
-    out of my cold dead body. What is the point of agents as a product right now?
-    I get that it's the dream of personal computing, but from what I can see, llm 
-    hallucination are not going to take us all the way. I haven't dug deep into 
-    agents yet, so I won't pass judgement on how much better they function. Looking
-    from the outside in, I think I will only be using them to try to build things,
-    not run my life.
+    out of my cold dead body. 
     </p>
-    <!-- Inline sidenote 4 for mobile -->
-    <div class="inline-sidenote" id="inline-note-4">
-      <span class="sidenote-number">4.</span>
-      <p>"<a href="https://xcancel.com/summeryue0/status/2025774069124399363#m">Safety and alignment at Meta Superintelligence.</a>"</p>
-    </div>
 
     <p>
-    Why does this software have more stars on github than the linux kernel? not that 
-    they mean anything. It is kind of a shame that it is not easy to run models with fairly current hardware
-    let alone train them. That all of the future of programming seems like it 
-    might be held by a few companies. I guess we'll find out in ten years if the 
-    llms really are [ <a href="https://www.ivanturkovic.com/2026/01/22/history-software-simplification-cobol-ai-hype/">the eternal promise</a> ]
+    Why does this software have more stars on github than the linux kernel? 
     </p>
     
   <footer>
@@ -362,22 +306,23 @@ footer pre {
     <summary><small>view prompt used</small></summary>
     <pre><code>
     write me a html css and java script website that looks like 
-    https://gwern.net/blog/2026/hutter-prize and don't fill it with content. Use
+    https://gwern.net/blog/2026/hutter-prize and don’t fill it with content. Use
     the theming of the html and css provided, but add the features of gwern 
     website. I would like to have the inline footnotes and the indicator across 
-    the top that shows how far in the article you've read. So as you scroll down,
-    a white line across the top shows how far you've scrolled.</code></pre>
+    the top that shows how far in the article you’ve read. So as you scroll down,
+    a white line across the top shows how far you’ve scrolled.</code></pre>
   </details>
 </footer>
 
   </div>
 
   <!-- RIGHT SIDENOTES -->
-  <div class="sidenotes-right" id="sidenotes-right"></div>
+  <div class="sidenotes-right" id="sidenotes-right">
+  </div>
 
 </div>
 
-<!-- Sidenote data -->
+<!-- Sidenote data — edit here to change content -->
 <script>
   const sidenotes = [
     {
@@ -417,9 +362,11 @@ footer pre {
     const leftCol = document.getElementById('sidenotes-left');
     const rightCol = document.getElementById('sidenotes-right');
 
+    // Clear existing
     leftCol.innerHTML = '';
     rightCol.innerHTML = '';
 
+    // Build note elements
     sidenotes.forEach(note => {
       const refEl = document.getElementById(note.refId);
       if (!refEl) return;
@@ -433,6 +380,7 @@ footer pre {
       col.appendChild(el);
     });
 
+    // Track the lowest used bottom edge for each column to avoid overlap
     const columnBottom = { left: 0, right: 0 };
 
     sidenotes.forEach(note => {
@@ -442,11 +390,13 @@ footer pre {
 
       const col = note.side === 'left' ? leftCol : rightCol;
 
+      // top of ref relative to the column (which is position:relative)
       const refRect = refEl.getBoundingClientRect();
       const colRect = col.getBoundingClientRect();
 
       let top = refRect.top - colRect.top;
 
+      // Don't overlap previous notes in this column
       const minTop = columnBottom[note.side];
       if (top < minTop) top = minTop;
 
@@ -455,17 +405,20 @@ footer pre {
       columnBottom[note.side] = top + noteEl.offsetHeight + 12;
     });
 
+    // Set column min-height so the grid doesn't collapse
     ['left', 'right'].forEach(side => {
       const col = document.getElementById('sidenotes-' + side);
       col.style.minHeight = columnBottom[side] + 'px';
     });
   }
 
+  // Run after layout settles
   window.addEventListener('load', () => {
     positionSidenotes();
   });
 
   window.addEventListener('resize', () => {
+    // Reset margin-tops before recalculating
     sidenotes.forEach(note => {
       const el = document.getElementById(note.id);
       if (el) el.style.marginTop = '0px';
